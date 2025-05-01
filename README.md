@@ -89,8 +89,8 @@ The setup is configured to:
 
 1. **Clone or download** this repository to your server
    ```bash
-   git clone <repository-url> webapp-stack
-   cd webapp-stack
+   git clone https://github.com/nityam2007/StaticPress-Docker.git
+   cd StaticPress-Docker
    ```
 
 2. **Create the network** (only needed once)
@@ -499,7 +499,8 @@ This stack is designed to be modular. To add new services:
 
 - [Docker Compose Documentation](https://docs.docker.com/compose/)
 - [WordPress Docker Documentation](https://hub.docker.com/_/wordpress)
-- [Nginx Proxy Manager Documentation](https://nginxproxymanager.com/)
+- [Nginx Proxy Manager Documentation](https://nginxproxymanager.com/guide/)
 - [LiteSpeed Documentation](https://docs.litespeedtech.com/lsws/)
 - [Simply Static Plugin](https://wordpress.org/plugins/simply-static/)
 - [WP2Static Plugin](https://wp2static.com/)
+- [StaticPress-Docker Repository](https://github.com/nityam2007/StaticPress-Docker)
