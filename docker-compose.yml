@@ -1,0 +1,56 @@
+# File location: docker-compose.yml
+version: '3.8'
+
+services:
+  mysql:
+    extends:
+      file: database.yml
+      service: mysql
+  
+  phpmyadmin:
+    extends:
+      file: database.yml
+      service: phpmyadmin
+    depends_on:
+      - mysql
+  
+  wordpress:
+    extends:
+      file: wordpress.yml
+      service: wordpress
+    depends_on:
+      - mysql
+  
+  nginx:
+    extends:
+      file: nginx.yml
+      service: nginx
+    depends_on:
+      - wordpress
+  
+  npm-db:
+    extends:
+      file: proxy.yml
+      service: npm-db
+  
+  nginx-proxy-manager:
+    extends:
+      file: proxy.yml
+      service: nginx-proxy-manager
+    depends_on:
+      - npm-db
+      - nginx
+  
+  # file-server:
+  #   extends:
+  #     file: fileserver.yml
+  #     service: file-server
+  
+  litespeed:
+    extends:
+      file: litespeed.yml
+      service: litespeed
+
+networks:
+  webapp_network:
+    external: true 

@@ -1,0 +1,28 @@
+# File location: wordpress.yml
+services:
+  wordpress:
+    image: wordpress:6.8.0-php8.4-fpm-alpine
+    container_name: wp-app
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress_password
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_TABLE_PREFIX: wp_
+    restart: unless-stopped
+    networks:
+      - webapp_network
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+networks:
+  webapp_network:
+    external: true
+    name: webapp_network 

@@ -1,0 +1,66 @@
+# File location: proxy.yml
+version: '3'
+
+services:
+  npm-db:
+    image: 'mariadb:10.5'
+    container_name: npm-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: npmrootpassword
+      MYSQL_DATABASE: npm
+      MYSQL_USER: npm
+      MYSQL_PASSWORD: npmpassword
+    volumes:
+      - ./npm-db-data:/var/lib/mysql
+    networks:
+      - webapp_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pnpmrootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  nginx-proxy-manager:
+    image: 'jc21/nginx-proxy-manager:2.9.19'
+    container_name: wp-nginx-proxy-manager
+    restart: unless-stopped
+    ports:
+      # Public HTTP Port
+      - '80:80'
+      # Public HTTPS Port
+      - '443:443'
+      # Admin Web UI
+      - '81:81'
+    environment:
+      # Database connection settings - using separate MariaDB
+      DB_MYSQL_HOST: npm-db
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: npm
+      DB_MYSQL_PASSWORD: npmpassword
+      DB_MYSQL_NAME: npm
+      # Set client max body size via environment variable
+      PROXY_MAX_BODY_SIZE: 256M
+      DISABLE_IPV6: 'true'
+    volumes:
+      - ./nginx-proxy-manager/data:/data
+      - ./nginx-proxy-manager/letsencrypt:/etc/letsencrypt
+    networks:
+      - webapp_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:81"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - npm-db
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  webapp_network:
+    external: true 

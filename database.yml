@@ -1,0 +1,49 @@
+# File location: database.yml
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: wp-db
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress_password
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    networks:
+      - webapp_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: wp-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: rootpassword
+      UPLOAD_LIMIT: 256M
+    # ports:
+    #   - "8082:80"
+    depends_on:
+      - mysql
+    networks:
+      - webapp_network
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:80/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  webapp_network:
+    external: true
+    name: webapp_network 

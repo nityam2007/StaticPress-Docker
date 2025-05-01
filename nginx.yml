@@ -1,0 +1,21 @@
+# File location: nginx.yml
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: wp-nginx
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    restart: unless-stopped
+    networks:
+      - webapp_network
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  webapp_network:
+    external: true 

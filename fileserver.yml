@@ -1,0 +1,30 @@
+# File location: fileserver.yml
+version: '3'
+
+services:
+  file-server:
+    image: nginx:alpine
+    container_name: file-server
+    restart: unless-stopped
+    # ports:
+    #   # # Expose file server on port 8080
+    #   # - '8080:80'
+    volumes:
+      - ./wordpress/static:/usr/share/nginx/html
+      - ./fileserver/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - webapp_network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  webapp_network:
+    external: true 

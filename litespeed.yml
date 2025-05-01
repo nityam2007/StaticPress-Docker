@@ -1,0 +1,34 @@
+# File location: litespeed.yml
+version: '3'
+
+services:
+  litespeed:
+    image: litespeedtech/openlitespeed:latest
+    container_name: litespeed-server
+    restart: unless-stopped
+    # ports:
+    #   # - "8888:80"
+    #   # - "7080:7080"  # Admin panel
+    volumes:
+      - ./wordpress/static:/var/www/vhosts/localhost/html  # Mount web folder from project root
+      # - ./litedata:/usr/local/lsws/conf # Configuration files
+    environment:
+      - TZ=UTC
+      # - OLS_ADMIN_USER=admin  # Admin username
+      # - OLS_ADMIN_PASS=litespeed123  # Admin password
+    networks:
+      - webapp_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  webapp_network:
+    external: true 
