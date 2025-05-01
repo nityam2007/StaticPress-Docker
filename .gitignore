@@ -1,0 +1,75 @@
+# Persistent data directories
+/wordpress/*
+!/wordpress/.gitkeep
+!/wordpress/static/.gitkeep
+
+/mysql-data/*
+!/mysql-data/.gitkeep
+
+/redis-data/*
+!/redis-data/.gitkeep
+
+/nginx-proxy-manager/data/*
+!/nginx-proxy-manager/data/.gitkeep
+
+/nginx-proxy-manager/letsencrypt/*
+!/nginx-proxy-manager/letsencrypt/.gitkeep
+
+/litedata/*
+!/litedata/.gitkeep
+
+/web/*
+!/web/.gitkeep
+
+# Logs
+*.log
+logs/
+nginx/logs/
+
+# Database backup files
+*.sql
+*.bak
+*.dump
+
+# Environment specific files
+.env
+.env.local
+
+# OS specific files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Temporary files
+.tmp/
+.temp/
+tmp/
+temp/
+
+# Compressed files that might be created during backups
+*.tar
+*.tar.gz
+*.zip
+*.7z
+*.rar
+
+# SSL certificates that might contain sensitive information
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.csr
+
+# PHP specific
+vendor/
+composer.lock 
